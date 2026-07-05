@@ -141,6 +141,10 @@ export function gammainc(a, x) {
 /**
  * Regularized upper incomplete gamma Q(a, x) = 1 - P(a, x), computed
  * without the cancellation of literally doing 1 - P.
+ *
+ * @param {number} a - Shape parameter, a > 0
+ * @param {number} x - Argument, x >= 0
+ * @returns {number} Q(a, x) in [0, 1]
  */
 export function gammaincc(a, x) {
   if (Number.isNaN(a) || Number.isNaN(x)) return NaN;
@@ -334,6 +338,9 @@ export function erf(x) {
 /**
  * Complementary error function erfc(x) = 1 - erf(x), computed without
  * cancellation for large positive x.
+ *
+ * @param {number} x
+ * @returns {number} 1 - erf(x)
  */
 export function erfc(x) {
   if (Number.isNaN(x)) return NaN;
@@ -341,7 +348,12 @@ export function erfc(x) {
   return 1 + gammainc(0.5, x * x);
 }
 
-/** Standard normal CDF Φ(x). */
+/**
+ * Standard normal cumulative distribution function.
+ *
+ * @param {number} x
+ * @returns {number} Φ(x), the probability that a standard normal is <= x
+ */
 export function normalCdf(x) {
   return 0.5 * erfc(-x / SQRT2);
 }
@@ -403,12 +415,24 @@ export function normalQuantile(p) {
   return x;
 }
 
-/** Log of the beta function ln B(a, b). */
+/**
+ * Log of the beta function, ln B(a, b) = ln Γ(a) + ln Γ(b) - ln Γ(a + b).
+ *
+ * @param {number} a - a > 0
+ * @param {number} b - b > 0
+ * @returns {number} ln B(a, b)
+ */
 export function lbeta(a, b) {
   return lgamma(a) + lgamma(b) - lgamma(a + b);
 }
 
-/** ln(n choose k) for non-negative integers. */
+/**
+ * Log of the binomial coefficient, ln (n choose k), for non-negative integers.
+ *
+ * @param {number} n - Total count, n >= 0
+ * @param {number} k - Chosen count; returns -Infinity outside 0 <= k <= n
+ * @returns {number} ln(n choose k)
+ */
 export function lchoose(n, k) {
   if (k < 0 || k > n) return -Infinity;
   return lgamma(n + 1) - lgamma(k + 1) - lgamma(n - k + 1);
