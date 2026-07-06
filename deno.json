@@ -5,7 +5,6 @@
   "publish": {
     "include": [
       "src/**/*.js",
-      "src/**/*.d.ts",
       "README.md",
       "CONTRACT.md",
       "LICENSE"
