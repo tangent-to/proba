@@ -12,16 +12,11 @@ as a plain object: density, cumulative probability, quantiles, moments,
 seedable sampling, and (the part most JavaScript libraries lack) the analytic
 gradient of the log density. Every distribution is validated against
 scipy.stats to machine precision.
-
-This notebook imports the local build. Once the package is published you would
-import it from a CDN instead:
-
-    import { normal, gamma, createRng } from 'https://esm.sh/@tangent.to/proba';
 */
 
 // %% [javascript]
 
-import { normal, gamma, beta, createRng } from '../dist/index.js';
+import { normal, gamma, beta, createRng } from 'https://esm.sh/@tangent.to/proba';
 
 // A distribution is a frozen object. Parameters are passed per call, so the
 // same object serves every parameterization.
