@@ -6,6 +6,11 @@
 
 import { lchoose, betainc } from './special.js';
 
+/**
+ * Binomial distribution: successes in n independent trials. Parameterized
+ * {n, p} with trial count n and success probability p in [0, 1]. Support is
+ * the integers {0, 1, ..., n}.
+ */
 export const binomial = Object.freeze({
   name: 'binomial',
   kind: 'discrete',

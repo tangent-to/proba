@@ -57,6 +57,10 @@ function sampleGammaUnitRate(alpha, rng) {
   }
 }
 
+/**
+ * Gamma distribution, parameterized {alpha, beta} with shape alpha > 0 and
+ * rate beta > 0. Support is (0, infinity).
+ */
 export const gamma = Object.freeze({
   name: 'gamma',
   kind: 'continuous',

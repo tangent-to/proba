@@ -15,6 +15,10 @@ function logpdf(x, { low, high }) {
   return -Math.log(high - low);
 }
 
+/**
+ * Continuous uniform distribution, parameterized {low, high} with low < high.
+ * Support is the interval [low, high].
+ */
 export const uniform = Object.freeze({
   name: 'uniform',
   kind: 'continuous',

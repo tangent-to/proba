@@ -33,6 +33,10 @@ function logpdf(x, { alpha, beta }) {
   return (alpha - 1) * Math.log(x) + (beta - 1) * Math.log1p(-x) - lbeta(alpha, beta);
 }
 
+/**
+ * Beta distribution, parameterized {alpha, beta} with shape parameters
+ * alpha > 0 and beta > 0. Support is the open interval (0, 1).
+ */
 export const beta = Object.freeze({
   name: 'beta',
   kind: 'continuous',

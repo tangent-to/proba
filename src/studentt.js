@@ -32,6 +32,10 @@ function gammaSample(shape, rng) {
   }
 }
 
+/**
+ * Student's t distribution, parameterized {nu} with degrees of freedom nu > 0.
+ * Support is the whole real line.
+ */
 export const studentT = Object.freeze({
   name: 'studentT',
   kind: 'continuous',

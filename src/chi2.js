@@ -33,6 +33,10 @@ function gammaSample(shape, rng) {
   }
 }
 
+/**
+ * Chi-squared distribution, parameterized {k} with degrees of freedom k > 0.
+ * Support is (0, infinity).
+ */
 export const chi2 = Object.freeze({
   name: 'chi2',
   kind: 'continuous',

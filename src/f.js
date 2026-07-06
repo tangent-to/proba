@@ -32,6 +32,10 @@ function gammaSample(shape, rng) {
   }
 }
 
+/**
+ * F distribution, parameterized {d1, d2} with numerator and denominator
+ * degrees of freedom d1 > 0 and d2 > 0. Support is (0, infinity).
+ */
 export const f = Object.freeze({
   name: 'f',
   kind: 'continuous',
