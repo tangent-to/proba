@@ -23,6 +23,10 @@ export { binomial } from './binomial.js';
 export { poisson } from './poisson.js';
 
 export { createRng } from './rng.js';
+/**
+ * Special functions (log-gamma, log-beta, incomplete gamma and beta, error
+ * functions and normal CDF) that back the distribution densities and quantiles.
+ */
 export * as special from './special.js';
 
 import { normal } from './normal.js';
@@ -61,6 +65,10 @@ export const distributions = Object.freeze({
   poisson,
 });
 
+/**
+ * Default export: every distribution by name, the `distributions` registry,
+ * `createRng`, and the `special` namespace, bundled for a single import.
+ */
 export default {
   ...distributions,
   distributions,

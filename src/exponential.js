@@ -15,6 +15,10 @@ function logpdf(x, { lambda }) {
   return Math.log(lambda) - lambda * x;
 }
 
+/**
+ * Exponential distribution, parameterized {lambda} with rate lambda > 0.
+ * Support is [0, infinity).
+ */
 export const exponential = Object.freeze({
   name: 'exponential',
   kind: 'continuous',

@@ -5,6 +5,10 @@
 
 import { lgamma, gammaincc } from './special.js';
 
+/**
+ * Poisson distribution, parameterized {lambda} with rate lambda > 0. Support
+ * is the non-negative integers {0, 1, 2, ...}.
+ */
 export const poisson = Object.freeze({
   name: 'poisson',
   kind: 'discrete',

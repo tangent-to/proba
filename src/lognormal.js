@@ -23,6 +23,10 @@ function logpdf(x, { mu, sigma }) {
   return -lx - Math.log(sigma) - LN_SQRT_2PI - 0.5 * z * z;
 }
 
+/**
+ * Log-normal distribution: exp(X) where X ~ Normal(mu, sigma). Parameterized
+ * {mu, sigma} with sigma > 0. Support is (0, infinity).
+ */
 export const lognormal = Object.freeze({
   name: 'lognormal',
   kind: 'continuous',

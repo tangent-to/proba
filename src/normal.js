@@ -20,6 +20,10 @@ function logpdf(x, { mu, sigma }) {
   return -Math.log(sigma) - LN_SQRT_2PI - 0.5 * z * z;
 }
 
+/**
+ * Normal (Gaussian) distribution, parameterized {mu, sigma} with mean mu and
+ * standard deviation sigma > 0. Support is the whole real line.
+ */
 export const normal = Object.freeze({
   name: 'normal',
   kind: 'continuous',

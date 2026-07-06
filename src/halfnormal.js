@@ -21,6 +21,10 @@ function logpdf(x, { sigma }) {
   return LN_SQRT_2_OVER_PI - Math.log(sigma) - 0.5 * z * z;
 }
 
+/**
+ * Half-normal distribution, the absolute value of a zero-mean normal.
+ * Parameterized {sigma} with scale sigma > 0. Support is [0, infinity).
+ */
 export const halfnormal = Object.freeze({
   name: 'halfnormal',
   kind: 'continuous',
