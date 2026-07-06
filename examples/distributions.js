@@ -14,7 +14,11 @@ scipy.stats to machine precision.
 
 // %% [javascript]
 
-import { normal, gamma, beta, createRng } from 'https://esm.sh/@tangent.to/proba';
+import * as __lib from 'https://esm.sh/@tangent.to/proba';
+const normal = __lib.normal;
+const gamma = __lib.gamma;
+const beta = __lib.beta;
+const createRng = __lib.createRng;
 
 // A distribution is a frozen object. Parameters are passed per call, so the
 // same object serves every parameterization.
