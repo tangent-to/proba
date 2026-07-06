@@ -1,3 +1,4 @@
+// @ts-self-types="./index.d.ts"
 /**
  * @tangent.to/proba - Probability distributions for JavaScript (ESM)
  *
