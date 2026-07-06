@@ -27,6 +27,7 @@
     "build:browser": "esbuild src/index.js --bundle --platform=browser --format=esm --target=es2020 --outfile=dist/index.js --sourcemap --minify --keep-names",
     "jsr:publish": "deno publish --allow-dirty",
     "jsr:publish:dry-run": "deno publish --dry-run --allow-dirty",
+    "version": "node scripts/sync-version.mjs && git add deno.json",
     "deno:check": "deno check src/index.js"
   },
   "keywords": [
