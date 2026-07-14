@@ -83,20 +83,32 @@ const FPMIN = Number.MIN_VALUE / EPS;
 const MAX_ITER = 300;
 
 /**
+ * Iteration cap for the incomplete-gamma series/continued fraction.
+ * Both need O(sqrt(a)) steps when x is near a (~8.6*sqrt(a) for the
+ * series), so the cap scales with the shape.
+ */
+function gammaMaxIter(a) {
+  return Math.max(MAX_ITER * 3, Math.ceil(30 * Math.sqrt(a)));
+}
+
+/**
  * Regularized lower incomplete gamma P(a, x) via its power series.
  * Valid (fast-converging) for x < a + 1.
  */
 function gammaPSeries(a, x) {
+  const maxIter = gammaMaxIter(a);
   let ap = a;
   let sum = 1 / a;
   let del = sum;
-  for (let i = 0; i < MAX_ITER * 3; i++) {
+  for (let i = 0; i < maxIter; i++) {
     ap += 1;
     del *= x / ap;
     sum += del;
-    if (Math.abs(del) < Math.abs(sum) * EPS) break;
+    if (Math.abs(del) < Math.abs(sum) * EPS) {
+      return sum * Math.exp(-x + a * Math.log(x) - lgamma(a));
+    }
   }
-  return sum * Math.exp(-x + a * Math.log(x) - lgamma(a));
+  throw new Error(`gammainc: power series failed to converge (a=${a}, x=${x})`);
 }
 
 /**
@@ -104,11 +116,12 @@ function gammaPSeries(a, x) {
  * continued fraction. Valid (fast-converging) for x >= a + 1.
  */
 function gammaQContinuedFraction(a, x) {
+  const maxIter = gammaMaxIter(a);
   let b = x + 1 - a;
   let c = 1 / FPMIN;
   let d = 1 / b;
   let h = d;
-  for (let i = 1; i <= MAX_ITER * 3; i++) {
+  for (let i = 1; i <= maxIter; i++) {
     const an = -i * (i - a);
     b += 2;
     d = an * d + b;
@@ -118,9 +131,11 @@ function gammaQContinuedFraction(a, x) {
     d = 1 / d;
     const del = d * c;
     h *= del;
-    if (Math.abs(del - 1) < EPS) break;
+    if (Math.abs(del - 1) < EPS) {
+      return h * Math.exp(-x + a * Math.log(x) - lgamma(a));
+    }
   }
-  return h * Math.exp(-x + a * Math.log(x) - lgamma(a));
+  throw new Error(`gammaincc: continued fraction failed to converge (a=${a}, x=${x})`);
 }
 
 /**
@@ -407,6 +422,10 @@ export function normalQuantile(p) {
       ACK_C[5]) /
       ((((ACK_D[0] * q + ACK_D[1]) * q + ACK_D[2]) * q + ACK_D[3]) * q + 1);
   }
+
+  // The Halley step needs exp(x^2/2), which overflows for |x| > ~37.6;
+  // in that far tail the Acklam approximation is already the best answer.
+  if (Math.abs(x) > 37) return x;
 
   // One Halley refinement using the exact CDF
   const e = normalCdf(x) - p;

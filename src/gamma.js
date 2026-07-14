@@ -19,7 +19,7 @@ import { digamma, gammainc, gammaincInv, lgamma } from './special.js';
  * @returns {number}
  */
 function logpdf(x, { alpha, beta }) {
-  if (x < 0) return -Infinity;
+  if (x < 0 || x === Infinity) return -Infinity;
   if (x === 0) {
     if (alpha < 1) return Infinity;
     if (alpha === 1) return Math.log(beta);
