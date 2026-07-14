@@ -1,6 +1,6 @@
 {
   "name": "@tangent.to/proba",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Probability distributions for JavaScript (ESM): logpdf with analytic gradients, pdf/cdf/quantile, seedable sampling. scipy.stats-validated.",
   "type": "module",
   "main": "./dist/index.js",
