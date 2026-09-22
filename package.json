@@ -52,7 +52,7 @@
     "node": ">=16.0.0"
   },
   "dependencies": {
-    "@tangent.to/grad": "^0.3.0"
+    "@tangent.to/grad": "0.3.1"
   },
   "devDependencies": {
     "esbuild": "^0.25.11",

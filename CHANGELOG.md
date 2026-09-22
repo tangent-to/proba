@@ -7,7 +7,17 @@ and the [release tags](https://github.com/tangent-to/proba/releases).
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+
 ## [Unreleased]
+
+### Fixed
+
+- **grad is pinned to 0.3.1 exactly.** A CDN such as jsdelivr bundles each
+  release once, with the dependency versions that were newest at that moment.
+  With a `^0.3.0` range, proba 0.2.1 was bundled with grad 0.3.0 and mc 0.12.0
+  with grad 0.3.1, so a browser loaded two copies of grad. proba then read mc's
+  Vars as constants and every observed likelihood dropped out of the model.
+  proba and mc now pin the same grad version and are released together.
 
 ### Added
 - **`logDensity(x, params)` on every distribution**: the log density as a
