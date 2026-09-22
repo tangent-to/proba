@@ -43,8 +43,5 @@
       "node_modules/",
       "coverage/"
     ]
-  },
-  "imports": {
-    "@tangent.to/grad": "jsr:@tangent/grad@^0.3.0"
   }
 }
