@@ -3,10 +3,13 @@
  * p in [0, 1]. Support is {0, 1}.
  */
 
+import * as density from './density.js';
+
 export const bernoulli = Object.freeze({
   name: 'bernoulli',
   kind: 'discrete',
   params: ['p'],
+  logDensity: density.bernoulli,
 
   support() {
     return [0, 1];

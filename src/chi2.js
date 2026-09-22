@@ -3,6 +3,7 @@
  */
 
 import { lgamma, digamma, gammainc, gammaincInv } from './special.js';
+import * as density from './density.js';
 
 const LN2 = Math.LN2;
 
@@ -41,6 +42,7 @@ export const chi2 = Object.freeze({
   name: 'chi2',
   kind: 'continuous',
   params: ['k'],
+  logDensity: density.chi2,
 
   support() {
     return [0, Infinity];

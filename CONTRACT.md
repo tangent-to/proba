@@ -25,6 +25,12 @@ export const normal = Object.freeze({
                                  //   evaluated AT x; NaN outside support is
                                  //   acceptable, gradients must be exact inside
 
+  logDensity(x, params),         // the same log density as a @tangent.to/grad
+                                 //   expression: x and any parameter may be a
+                                 //   Var; ELEMENTWISE (shaped like x, or the
+                                 //   broadcast of x and the parameters); the
+                                 //   support is NOT checked (see density.js)
+
   sample(params, rng),           // one draw using rng from createRng()
   sampleN(params, rng, n),       // Array of n draws
 
@@ -45,6 +51,14 @@ Rules:
   - The scipy comparison suite documents the mapping for each.
 - **logpdf is the source of truth**: pdf = exp(logpdf); never implement pdf
   separately.
+- **logDensity is logpdf on the tape**: the same formula in grad ops, in
+  `src/density.js`, one function per distribution, wired into each object.
+  Inside the support, on plain numbers, it must agree with `logpdf`, and its
+  gradients through grad must agree with `dlogpdf`, in `x` and in every
+  parameter (tested). It does not branch on the support, since a branch on a
+  `Var` is not differentiable; a sampler keeps its values inside by
+  construction, and observed data is the caller's to validate. It is
+  elementwise: callers reduce.
 - **dlogpdf derivative names**: `d` + parameter name (`dmu`, `dsigma`,
   `dalpha`, ...) plus `dx` for continuous distributions. These are what mc's
   HMC/NUTS consume; they must match `numericalGradient` of logpdf to ~1e-6

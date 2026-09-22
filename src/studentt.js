@@ -4,6 +4,7 @@
  */
 
 import { lgamma, digamma, betainc, betaincInv } from './special.js';
+import * as density from './density.js';
 
 /**
  * One gamma(shape, rate 1) draw via Marsaglia-Tsang, with the standard
@@ -40,6 +41,7 @@ export const studentT = Object.freeze({
   name: 'studentT',
   kind: 'continuous',
   params: ['nu', 'mu', 'sigma'],
+  logDensity: density.studentT,
 
   support() {
     return [-Infinity, Infinity];

@@ -4,6 +4,7 @@
  */
 
 import { digamma, gammainc, gammaincInv, lgamma } from './special.js';
+import * as density from './density.js';
 
 /**
  * Log density: alpha ln(beta) - lnGamma(alpha) + (alpha-1) ln(x) - beta x
@@ -65,6 +66,7 @@ export const gamma = Object.freeze({
   name: 'gamma',
   kind: 'continuous',
   params: ['alpha', 'beta'],
+  logDensity: density.gamma,
 
   support() {
     return [0, Infinity];

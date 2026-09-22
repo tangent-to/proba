@@ -19,10 +19,13 @@ function logpdf(x, { low, high }) {
  * Continuous uniform distribution, parameterized {low, high} with low < high.
  * Support is the interval [low, high].
  */
+import * as density from './density.js';
+
 export const uniform = Object.freeze({
   name: 'uniform',
   kind: 'continuous',
   params: ['low', 'high'],
+  logDensity: density.uniform,
 
   support({ low, high }) {
     return [low, high];

@@ -1,7 +1,7 @@
 {
   "name": "@tangent.to/proba",
   "version": "0.1.2",
-  "description": "Probability distributions for JavaScript (ESM): logpdf with analytic gradients, pdf/cdf/quantile, seedable sampling. scipy.stats-validated.",
+  "description": "Probability distributions for JavaScript (ESM): logpdf with analytic gradients, logDensity as a differentiable expression, pdf/cdf/quantile, seedable sampling. scipy.stats-validated.",
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
@@ -17,14 +17,15 @@
     "dist",
     "README.md",
     "CONTRACT.md",
-    "LICENSE"
+    "LICENSE",
+    "CHANGELOG.md"
   ],
   "scripts": {
     "prepare": "npm run build:browser",
     "test": "vitest",
     "test:run": "vitest run",
     "test:scipy": "uv run --with scipy python3 tests_compare-to-scipy/compare_with_scipy.py",
-    "build:browser": "esbuild src/index.js --bundle --platform=browser --format=esm --target=es2020 --outfile=dist/index.js --sourcemap --minify --keep-names",
+    "build:browser": "esbuild src/index.js --bundle --platform=browser --format=esm --target=es2020 --outfile=dist/index.js --sourcemap --minify --keep-names --external:@tangent.to/*",
     "jsr:publish": "deno publish --allow-dirty",
     "jsr:publish:dry-run": "deno publish --dry-run --allow-dirty",
     "version": "node scripts/sync-version.mjs && git add deno.json",
@@ -49,6 +50,9 @@
   },
   "engines": {
     "node": ">=16.0.0"
+  },
+  "dependencies": {
+    "@tangent.to/grad": "^0.3.0"
   },
   "devDependencies": {
     "esbuild": "^0.25.11",

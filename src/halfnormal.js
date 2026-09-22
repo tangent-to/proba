@@ -3,6 +3,7 @@
  */
 
 import { normalCdf, normalQuantile } from './special.js';
+import * as density from './density.js';
 
 const LN_SQRT_2_OVER_PI = 0.5 * Math.log(2 / Math.PI); // ln(sqrt(2/pi))
 
@@ -29,6 +30,7 @@ export const halfnormal = Object.freeze({
   name: 'halfnormal',
   kind: 'continuous',
   params: ['sigma'],
+  logDensity: density.halfnormal,
 
   support() {
     return [0, Infinity];

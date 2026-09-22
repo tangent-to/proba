@@ -5,6 +5,7 @@
  */
 
 import { lchoose, betainc } from './special.js';
+import * as density from './density.js';
 
 /**
  * Binomial distribution: successes in n independent trials. Parameterized
@@ -15,6 +16,7 @@ export const binomial = Object.freeze({
   name: 'binomial',
   kind: 'discrete',
   params: ['n', 'p'],
+  logDensity: density.binomial,
 
   support({ n }) {
     return [0, n];

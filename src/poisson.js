@@ -4,6 +4,7 @@
  */
 
 import { lgamma, gammaincc } from './special.js';
+import * as density from './density.js';
 
 /**
  * Poisson distribution, parameterized {lambda} with rate lambda > 0. Support
@@ -13,6 +14,7 @@ export const poisson = Object.freeze({
   name: 'poisson',
   kind: 'discrete',
   params: ['lambda'],
+  logDensity: density.poisson,
 
   support() {
     return [0, Infinity];

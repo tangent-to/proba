@@ -19,10 +19,13 @@ function logpdf(x, { lambda }) {
  * Exponential distribution, parameterized {lambda} with rate lambda > 0.
  * Support is [0, infinity).
  */
+import * as density from './density.js';
+
 export const exponential = Object.freeze({
   name: 'exponential',
   kind: 'continuous',
   params: ['lambda'],
+  logDensity: density.exponential,
 
   support() {
     return [0, Infinity];

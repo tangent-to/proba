@@ -4,6 +4,7 @@
  */
 
 import { normalCdf, normalQuantile } from './special.js';
+import * as density from './density.js';
 
 const LN_SQRT_2PI = 0.9189385332046727; // ln(sqrt(2*pi))
 
@@ -28,6 +29,7 @@ export const normal = Object.freeze({
   name: 'normal',
   kind: 'continuous',
   params: ['mu', 'sigma'],
+  logDensity: density.normal,
 
   support() {
     return [-Infinity, Infinity];

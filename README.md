@@ -45,6 +45,33 @@ rate, `lognormal {mu, sigma}` are log-scale parameters. See
 [CONTRACT.md](./CONTRACT.md) for the full contract every distribution
 satisfies, including edge-case behavior.
 
+## On the tape
+
+Every distribution also carries `logDensity(x, params)`: the same log
+density written in [`@tangent.to/grad`](https://github.com/tangent-to/grad)
+ops, so that `x` and any parameter may be a `Var` and the result is
+differentiable in all of them. It is elementwise, shaped like `x`, and it
+does not check the support (a branch on a `Var` is not differentiable); see
+[`src/density.js`](src/density.js) for both rules.
+
+```javascript
+import { normal, poisson } from '@tangent.to/proba';
+import { compile, exp, mean, neg } from '@tangent.to/grad';
+
+// A Gaussian negative log-likelihood with a learned log-scale, as a loss
+const nll = compile((p, d) =>
+  neg(mean(normal.logDensity(d.y, { mu: p.mu, sigma: exp(p.logSigma) }))));
+nll({ mu: 0.2, logSigma: 0 }, { y: data });   // { value, gradient }
+
+// A count likelihood on a log-rate
+poisson.logDensity(counts, { lambda: exp(logRate) });
+```
+
+`logpdf` stays the scalar path for plain numbers; `logDensity` agrees with it
+inside the support, and its gradients with `dlogpdf`, which is how it is
+tested. [mc](https://github.com/tangent-to/mc) derives its observation
+models from it; [nn](https://github.com/tangent-to/nn) its likelihood losses.
+
 ## Validation against scipy
 
 `tests_compare-to-scipy/` checks every distribution against `scipy.stats`
