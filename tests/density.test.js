@@ -10,7 +10,7 @@
  */
 
 import { describe, expect, it } from 'vitest';
-import { sum, valueAndGrad, Var } from '@tangent.to/grad';
+import { compile, compileFromJSON, sum, valueAndGrad, Var } from '@tangent.to/grad';
 import { distributions } from '../src/index.js';
 
 const fixtures = {
@@ -102,5 +102,55 @@ describe('logDensity broadcasts', () => {
     const v = distributions.uniform.logDensity([0, 5], { low: -1, high: 3 });
     expect(v.data[0]).toBeCloseTo(-Math.log(4), 12);
     expect(v.data[1]).toBe(-Infinity);
+  });
+});
+
+describe('compiled discrete logDensity', () => {
+  const { binomial, poisson } = distributions;
+
+  it('recomputes the Poisson factorial for each same-shape batch', () => {
+    const objective = compile((lambda, { counts }) => sum(poisson.logDensity(counts, { lambda })));
+    const lambda = 2;
+    const check = (evaluate, counts) => {
+      const expected = counts.reduce((total, x) => total + poisson.logpdf(x, { lambda }), 0);
+      const result = evaluate(lambda, { counts });
+      close(result.value, expected);
+      close(result.gradient, counts.reduce((total, x) => total + x / lambda - 1, 0));
+      close(evaluate.value(lambda, { counts }), expected);
+    };
+
+    check(objective, [1, 0]);
+    check(objective, [5, 3]);
+    const restored = compileFromJSON(JSON.parse(JSON.stringify(objective.toJSON())));
+    check(restored, [8, 2]);
+  });
+
+  it('recomputes binomial coefficients when successes or trial counts change', () => {
+    const objective = compile((p, { x, n }) => sum(binomial.logDensity(x, { n, p })));
+    const p = 0.4;
+    for (const { x, n } of [
+      { x: [1, 4], n: [6, 9] },
+      { x: [3, 2], n: [6, 9] },
+      { x: [3, 2], n: [10, 4] },
+    ]) {
+      const params = x.map((_, i) => ({ n: n[i], p }));
+      const result = objective(p, { x, n });
+      close(result.value, x.reduce((total, count, i) => total + binomial.logpdf(count, params[i]), 0));
+      close(result.gradient, x.reduce((total, count, i) => total + binomial.dlogpdf(count, params[i]).dp, 0));
+    }
+  });
+
+  it('broadcasts trial counts across rows of a matrix of successes', () => {
+    const objective = compile((p, { x, n }) => binomial.logDensity(x, { n, p }));
+    const p = 0.4;
+    for (const { x, n } of [
+      { x: [[0, 2], [2, 1]], n: [3, 5] },
+      { x: [[4, 1], [2, 4]], n: [4, 6] },
+    ]) {
+      const result = objective.value(p, { x, n });
+      x.forEach((row, i) => row.forEach((count, j) => {
+        close(result[i][j], binomial.logpdf(count, { n: n[j], p }));
+      }));
+    }
   });
 });

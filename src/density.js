@@ -29,28 +29,18 @@
  */
 
 import { add, div, lgamma, log, mul, neg, square, sub, toNested, Var } from '@tangent.to/grad';
-// A scalar log-gamma for the constants of the discrete densities: the tape's
-// `lgamma` would do, but a constant should not cost a node.
-import { lchoose, lgamma as lgammaNumber } from './special.js';
 
 const LN_SQRT_2PI = 0.9189385332046727; // ln sqrt(2 pi)
 const LN_SQRT_2_OVER_PI = -0.22579135264472744; // ln sqrt(2 / pi)
 const LN2 = Math.LN2;
-
-/** `x` as plain numbers, for a combinatorial constant that has no derivative. @private */
-function plain(x) {
-  return x instanceof Var ? toNested(x.value) : x;
-}
 
 /** Apply a scalar function to a number or (nested) array of numbers. @private */
 function mapPlain(x, f) {
   return Array.isArray(x) ? x.map((v) => mapPlain(v, f)) : f(x);
 }
 
-/** lgamma(x + 1) of plain integers, as a constant. @private */
-function lfactorial(x) {
-  return mapPlain(plain(x), (v) => lgammaNumber(v + 1));
-}
+/** Elementwise log-factorial for counts, including inputs to a compiled tape. */
+const logFactorial = (x) => lgamma(add(x, 1));
 
 /** ln B(a, b) as an expression, for parameters that may be Vars. @private */
 const lbetaExpr = (a, b) => sub(add(lgamma(a), lgamma(b)), lgamma(add(a, b)));
@@ -153,19 +143,19 @@ export function bernoulli(x, { p }) {
 }
 
 /**
- * Binomial: ln C(n, x) + x log p + (n - x) log(1 - p). `n` and `x` are
- * counts, plain numbers; the combinatorial term is a constant.
+ * Binomial: ln C(n, x) + x log p + (n - x) log(1 - p).
+ * Keep the coefficient on the tape if either count can change on replay.
  */
 export function binomial(x, { n, p }) {
-  const xs = plain(x);
-  const ns = plain(n);
-  const lc = Array.isArray(xs)
-    ? xs.map((xi, i) => lchoose(Array.isArray(ns) ? ns[i] : ns, xi))
-    : lchoose(ns, xs);
-  return add(lc, mul(x, log(p)), mul(sub(n, x), log(sub(1, p))));
+  const failures = sub(n, x);
+  const coefficient = sub(sub(logFactorial(n), logFactorial(x)), logFactorial(failures));
+  const logChoose = x instanceof Var || n instanceof Var ? coefficient : toNested(coefficient.value);
+  return add(logChoose, mul(x, log(p)), mul(failures, log(sub(1, p))));
 }
 
-/** Poisson: x log λ - λ - lgamma(x + 1); the last term is a constant in x. */
+/** Poisson: x log λ - λ - lgamma(x + 1). */
 export function poisson(x, { lambda }) {
-  return sub(sub(mul(x, log(lambda)), lambda), lfactorial(x));
+  const factorial = logFactorial(x);
+  const normalizer = x instanceof Var ? factorial : toNested(factorial.value);
+  return sub(sub(mul(x, log(lambda)), lambda), normalizer);
 }

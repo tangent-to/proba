@@ -12,6 +12,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Compiled Poisson and binomial log densities now recompute their count-dependent
+  terms when replayed on a new batch. Binomial trial counts also broadcast across
+  matrix inputs.
 - **grad is pinned to 0.3.1 exactly.** A CDN such as jsdelivr bundles each
   release once, with the dependency versions that were newest at that moment.
   With a `^0.3.0` range, proba 0.2.1 was bundled with grad 0.3.0 and mc 0.12.0
