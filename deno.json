@@ -1,6 +1,6 @@
 {
   "name": "@tangent/proba",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "exports": "./src/index.js",
   "publish": {
     "include": [
