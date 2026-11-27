@@ -54,12 +54,14 @@ export const poisson = Object.freeze({
     // Bracket doubling, then binary search for the smallest k with cdf(k) >= prob.
     let lo = 0;
     let hi = 1;
-    while (this.cdf(hi, params) < prob) {
+    while (Number.isFinite(hi) && this.cdf(hi, params) < prob) {
       lo = hi;
       hi *= 2;
     }
+    if (!Number.isFinite(hi)) return Infinity;
     while (hi - lo > 1) {
-      const mid = (lo + hi) >> 1;
+      const mid = lo + Math.floor((hi - lo) / 2);
+      if (mid === lo || mid === hi) break;
       if (this.cdf(mid, params) >= prob) hi = mid;
       else lo = mid;
     }

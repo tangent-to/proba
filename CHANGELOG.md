@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Binomial and Poisson quantile searches use overflow-safe midpoint arithmetic
+  so large counts above 32-bit signed integers terminate cleanly.
 - Compiled Poisson and binomial log densities now recompute their count-dependent
   terms when replayed on a new batch. Binomial trial counts also broadcast across
   matrix inputs.

@@ -68,7 +68,8 @@ export const binomial = Object.freeze({
       hi = Math.min(2 * hi, n);
     }
     while (hi - lo > 1) {
-      const mid = (lo + hi) >> 1;
+      const mid = lo + Math.floor((hi - lo) / 2);
+      if (mid === lo || mid === hi) break;
       if (this.cdf(mid, params) >= prob) hi = mid;
       else lo = mid;
     }

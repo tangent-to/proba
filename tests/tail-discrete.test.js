@@ -134,6 +134,23 @@ describe('cdf/quantile round-trips', () => {
     }
   });
 
+  it('binomial and poisson quantiles terminate without 32-bit overflow at large counts', () => {
+    const bParams = { n: 3_000_000_000, p: 0.8 };
+    const bMedian = binomial.quantile(0.5, bParams);
+    expect(Number.isInteger(bMedian)).toBe(true);
+    expect(bMedian).toBeGreaterThan(2_147_483_648);
+    expect(bMedian).toBeLessThanOrEqual(bParams.n);
+    expect(binomial.cdf(bMedian, bParams)).toBeGreaterThanOrEqual(0.5);
+    expect(binomial.cdf(bMedian - 1, bParams)).toBeLessThan(0.5);
+
+    const pParams = { lambda: 3_000_000_000 };
+    const pMedian = poisson.quantile(0.5, pParams);
+    expect(Number.isInteger(pMedian)).toBe(true);
+    expect(pMedian).toBeGreaterThan(2_147_483_648);
+    expect(poisson.cdf(pMedian, pParams)).toBeGreaterThanOrEqual(0.5);
+    expect(poisson.cdf(pMedian - 1, pParams)).toBeLessThan(0.5);
+  });
+
   it('cdf spot values match scipy', () => {
     expect(studentT.cdf(1.3, { nu: 5, mu: 0.5, sigma: 2 }))
       .toBeCloseTo(0.6471634425834427, 11);
